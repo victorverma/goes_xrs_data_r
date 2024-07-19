@@ -1,4 +1,8 @@
-# `code/download_raw_data.sh`
+# goes_xrs_data_r
+
+R code for downloading and collating science-quality long-channel GOES XRS data
+
+## `code/download_raw_data.sh`
 
 This script saves raw data files in `raw/`; it should be run from `code/`. The URLs for the raw data files were found by following links from [this page](https://www.ngdc.noaa.gov/stp/satellite/goes-r.html), which links to
 repositories of science-quality data. The links to follow are those for the
