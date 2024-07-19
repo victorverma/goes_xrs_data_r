@@ -108,7 +108,7 @@ make_goes_flux_tbl <- function(file, complete = TRUE) {
 
 # For each satellite, extract the data from it into a tibble
 goes_flux_tbl_nms <- character()
-for (file in list.files(here("data/raw/flux/1m/"), full.names = TRUE)) {
+for (file in list.files(here("data/raw/"), full.names = TRUE)) {
   goes_flux_tbl_nm <- file %>%
     basename() %>%
     file_path_sans_ext() %>%
