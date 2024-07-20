@@ -2,7 +2,14 @@
 
 ## Overview
 
-R code for downloading and collating science-quality long-channel GOES XRS data
+R code for downloading and collating science-quality long-channel GOES XRS data.
+Some references are listed below. (1) is a readme for science-quality GOES 13-15 data. (2) and (3) have
+information about GOES 16-18 data; they also have information specifically
+about the minutely data.
+
+1. https://www.ncei.noaa.gov/data/goes-space-environment-monitor/access/science/xrs/GOES_1-15_XRS_Science-Quality_Data_Readme.pdf
+2. https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes16/l2/docs/GOES-R_XRS_L2_Data_Users_Guide.pdf
+3. https://data.ngdc.noaa.gov/platforms/solar-space-observing-satellites/goes/goes16/l2/docs/GOES-R_XRS_L2_Data_Readme.pdf
 
 ## Usage
 
