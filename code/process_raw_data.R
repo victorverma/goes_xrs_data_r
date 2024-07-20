@@ -156,6 +156,8 @@ primary_secondary_tbl <- tribble(
   ymd_hm("1986-01-01 00:00"), 6, 5
 ) %>%
   mutate(
+    primary_satellite = as.integer(primary_satellite),
+    secondary_satellite = as.integer(secondary_satellite),
     end_time = c(
       ymd_hms("9999-12-31 11:59:59"), head(start_time, -1) - seconds(1)
     )
@@ -167,7 +169,7 @@ flux_tbl <- goes_flux_tbl_nms %>%
   mget(.GlobalEnv) %>%
   map(~ select(.x, time, flux, good_data)) %>%
   list_rbind(names_to = "satellite") %>%
-  mutate(satellite = str_extract(satellite, "\\d+")) %>%
+  mutate(satellite = as.integer(str_extract(satellite, "\\d+"))) %>%
   arrange(time)
 
 # Keep the records that are from a primary or secondary satellite
