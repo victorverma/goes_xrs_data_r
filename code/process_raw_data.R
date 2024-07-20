@@ -110,19 +110,18 @@ for (file in list.files(here("data/raw/"), full.names = TRUE)) {
 
 # At any time, one GOES satellite is supposed to be the primary satellite and
 # another is supposed to be the secondary satellite. Data from the secondary
-# satellite is used when the primary satellite is being eclipsed or under
-# maintenance, otherwise primary data should be used. The information in the
-# tibble below is from Table 6 in (1). In the table, if the transition time is
-# midnight, then the exact time is actually unknown. Janet Machol of NOAA
-# clarified some features of the table for me. If a primary/secondary entry is
-# blank, then there was no change from the previous transition time. For
-# example, in the table, the primary entry for 2016-05-16 17:00 is blank; this
-# means that the primary satellite didn't change at that time - it continued to
-# be GOES-14. If a secondary entry is "None", then there was no secondary
-# satellite at the corresponding time. I noticed some discrepancies between
-# Table 6 of (1) and Table 2 of (2). Dr. Machol recommended using (1) since it
-# is for science-quality data, which should be used, while (2) is for
-# operational data, and is also not as up-to-date.
+# satellite is used only when the primary satellite is being eclipsed or is
+# under maintenance. The information in the tibble below is from Table 6 in (1).
+# In the table, if the transition time is midnight, then the exact time is
+# actually unknown. Janet Machol of NOAA clarified some features of the table
+# for me. If a primary/secondary entry is blank, then there was no change from
+# the previous transition time. For example, in the table, the primary entry for
+# 2016-05-16 17:00 is blank; this means that the primary satellite didn't change
+# at that time - it continued to be GOES-14. If a secondary entry is "None",
+# then there was no secondary satellite at the corresponding time. I noticed
+# some discrepancies between Table 6 of (1) and Table 2 of (2). Dr. Machol
+# recommended using (1) since it is for science-quality data, which should be
+# used, while (2) is for operational data, and is also not as up-to-date.
 #
 # (1) https://www.ncei.noaa.gov/data/goes-space-environment-monitor/access/science/xrs/GOES_1-15_XRS_Science-Quality_Data_Readme.pdf
 # (2) https://ngdc.noaa.gov/stp/satellite/goes/doc/GOES_XRS_readme.pdf
