@@ -12,16 +12,16 @@ library(tools)
 
 make_goes_flux_tbl <- function(file, complete = TRUE) {
   netcdf_obj <- nc_open(file)
-  
-  # If this definition were outside the body of this function, it would have to
-  # take netcdf_obj as an argument. netcdf_obj may be large; I don't know
-  # whether it would be copied in that scenario, and I don't know if it would be
-  # safe to copy it
+
+  # If this were defined outside the body of the current function, it would have
+  # to take netcdf_obj as an argument, and when this would be called,
+  # netcdf_obj would be copied into the evaluation environment. I wanted to
+  # avoid that since netcdf_obj can be large
   make_var_tbl <- function(var) {
     # Using as.vector() is necessary because ncvar_get() returns a 1D array
     tibble("{var}" := as.vector(ncvar_get(netcdf_obj, var)))
   }
-  
+
   goes_flux_tbl <- netcdf_obj %>%
     `$`("var") %>%
     names() %>%
