@@ -55,6 +55,7 @@ make_goes_flux_tbl <- function(file, complete = TRUE) {
         flag_values <<- set_names(flag_values, flag_meanings)
       }
     )
+  # Now use the metadata to interpret the flag values
   for (flag_meaning in flag_meanings) {
     flag_mask <- flag_masks[flag_meaning]
     flag_value <- flag_values[flag_meaning]
