@@ -28,16 +28,38 @@ files=(
   "../data/raw/goes18.nc"
 )
 
-for ((i=0; i<${#urls[@]}; i++)); do
-  echo "Creating ${files[i]}..."
-  curl -o "${files[i]}" "${urls[i]}"
-  if [ $? -eq 0 ]; then
-    if [ -s "${files[i]}" ]; then
-      echo "Download succeeded."
+download_file() {
+  local index=$1
+  echo "Creating ${files[index]}"
+  curl -o "${files[index]}" "${urls[index]}"
+  local err_code=$?
+  if [ $err_code -eq 0 ]; then
+    if [ -s "${files[index]}" ]; then
+      echo "File created successfully"
     else
-      echo "${files[i]} is empty."
-    fi    
+      echo "File doesn't exist or is empty"
+    fi
   else
-    echo "curl failed."
+    echo "curl failed with error code ${err_code}"
   fi
-done
+}
+
+if [ $# -eq 0 ]; then
+  for i in "${!files[@]}"; do
+    download_file $i
+  done
+else
+  target="$1"
+  index=-1
+  for i in "${!files[@]}"; do
+    if [[ "${files[i]}" == *"$target.nc" ]]; then
+      index=$i
+      break
+    fi
+  done
+  if [ $index -ne -1 ]; then
+    download_file $index
+  else
+    echo "Satellite not found"
+  fi
+fi
