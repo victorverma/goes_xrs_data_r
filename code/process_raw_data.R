@@ -210,9 +210,8 @@ flux_tbl <- flux_tbl %>%
 
 # Save the processed data -------------------------------------------------
 
+save(flux_tbl, file = here("data/processed/flux_tbl.RData"))
 save(
-  list = c(
-    ls(pattern = "^goes\\d+_flux_tbl"), "primary_secondary_tbl", "flux_tbl"
-  ),
-  file = here("data/processed/data.RData")
+  list = c(ls(pattern = "^goes\\d+_flux_tbl"), "primary_secondary_tbl"),
+  file = here("data/processed/other_tbls.RData")
 )
