@@ -192,17 +192,20 @@ flux_tbl <- flux_tbl %>%
   pivot_wider(
     id_cols = time,
     names_from = rec_type,
+    names_glue = "{rec_type}_{.value}",
     values_from = c(satellite, flux, good_data)
   ) %>%
+  relocate(starts_with("primary"), .before = starts_with("secondary")) %>%
   mutate(
     satellite = case_when(
-      good_data_primary ~ satellite_primary,
-      good_data_secondary ~ satellite_secondary
+      primary_good_data ~ primary_satellite,
+      secondary_good_data ~ secondary_satellite
     ),
     flux = case_when(
-      good_data_primary ~ flux_primary, good_data_secondary ~ flux_secondary
+      primary_good_data ~ primary_flux, secondary_good_data ~ secondary_flux
     ),
-    good_data = coalesce(good_data_primary | good_data_secondary, FALSE)
+    good_data = coalesce(primary_good_data | secondary_good_data, FALSE),
+    .after = time
   )
 
 # Save the processed data -------------------------------------------------
