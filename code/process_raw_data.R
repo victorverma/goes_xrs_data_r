@@ -2,11 +2,19 @@ here::i_am("code/process_raw_data.R")
 
 # Load packages -----------------------------------------------------------
 
-library(here)
-library(lubridate)
-library(ncdf4)
-library(tidyverse)
-library(tools)
+suppressPackageStartupMessages({
+  library(here)
+  library(logger)
+  library(lubridate)
+  library(ncdf4)
+  library(tidyverse)
+  library(tools)
+})
+
+# Set up the log file -----------------------------------------------------
+
+invisible(file.remove(here("code/process_raw_data.log")))
+log_appender(appender_tee(here("code/process_raw_data.log")))
 
 # Define functions --------------------------------------------------------
 
@@ -98,6 +106,7 @@ make_goes_flux_tbl <- function(file, complete = TRUE) {
 # Process the data --------------------------------------------------------
 
 # For each satellite, extract the data from it into a tibble
+log_info("Started creating GOES tibbles")
 goes_flux_tbl_nms <- character()
 for (file in list.files(here("data/raw/"), full.names = TRUE)) {
   goes_flux_tbl_nm <- file %>%
@@ -105,7 +114,11 @@ for (file in list.files(here("data/raw/"), full.names = TRUE)) {
     file_path_sans_ext() %>%
     str_c("flux_tbl", sep = "_")
   goes_flux_tbl_nms <- c(goes_flux_tbl_nms, goes_flux_tbl_nm)
-  assign(goes_flux_tbl_nm, make_goes_flux_tbl(file))
+  time_elapsed <- system.time(
+    assign(goes_flux_tbl_nm, make_goes_flux_tbl(file))
+  )["elapsed"]
+  time_elapsed <- signif(time_elapsed, 2)
+  log_info(str_glue("Created {goes_flux_tbl_nm} in {time_elapsed}s"))
 }
 
 # At any time, one GOES satellite is supposed to be the primary satellite and
@@ -125,6 +138,7 @@ for (file in list.files(here("data/raw/"), full.names = TRUE)) {
 #
 # (1) https://www.ncei.noaa.gov/data/goes-space-environment-monitor/access/science/xrs/GOES_1-15_XRS_Science-Quality_Data_Readme.pdf
 # (2) https://ngdc.noaa.gov/stp/satellite/goes/doc/GOES_XRS_readme.pdf
+log_info("Creating primary_secondary_tbl")
 primary_secondary_tbl <- tribble(
   ~start_time, ~primary_satellite, ~secondary_satellite,
   ymd_hm("2023-01-04 00:00"), 16, 18,
@@ -163,6 +177,8 @@ primary_secondary_tbl <- tribble(
     )
   ) %>%
   relocate(end_time, .after = start_time)
+
+log_info("Creating flux_tbl")
 
 # Stack the tibbles for the individual satellites
 flux_tbl <- goes_flux_tbl_nms %>%
@@ -212,11 +228,14 @@ flux_tbl <- flux_tbl %>%
     good_data = coalesce(primary_good_data | secondary_good_data, FALSE),
     .after = time
   )
+log_info("Finished creating flux_tbl")
 
 # Save the processed data -------------------------------------------------
 
+log_info("Saving tibbles")
 save(flux_tbl, file = here("data/processed/flux_tbl.RData"))
 save(
   list = c(ls(pattern = "^goes\\d+_flux_tbl"), "primary_secondary_tbl"),
   file = here("data/processed/other_tbls.RData")
 )
+log_info("Done")
