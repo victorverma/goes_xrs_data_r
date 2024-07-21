@@ -172,6 +172,11 @@ flux_tbl <- goes_flux_tbl_nms %>%
   mutate(satellite = as.integer(str_extract(satellite, "\\d+"))) %>%
   arrange(time)
 
+# Fix the few records that are flagged as good, but are missing a flux value
+flux_tbl <- mutate(
+  flux_tbl, good_data = if_else(good_data & is.na(flux), FALSE, good_data)
+)
+
 # Keep the records that are from a primary or secondary satellite
 flux_tbl <- flux_tbl %>%
   inner_join(
