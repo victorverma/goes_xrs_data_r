@@ -45,16 +45,13 @@ make_goes_flux_tbl <- function(file, complete = TRUE) {
 
   # Extract metadata needed for interpreting the flag values in the data. This 
   # approach is based on a recommendation from Janet Machol of NOAA
+  flag_var <- str_subset(names(netcdf_obj$var), "^xrsb_flag[s]?$")
+  stopifnot(length(flag_var) == 1)
   flag_meanings <- NULL
   flag_masks <- NULL
   flag_values <- NULL
   netcdf_obj %>%
-    {
-      tryCatch(
-        ncatt_get(., "xrsb_flag"),
-        error = function(e) ncatt_get(., "xrsb_flags")
-      )
-    } %>%
+    ncatt_get(flag_var) %>%
     with(
       {
         flag_meanings <- unlist(str_split(flag_meanings, " "))
