@@ -47,9 +47,7 @@ make_goes_flux_tbl <- function(file, complete = TRUE) {
   # approach is based on a recommendation from Janet Machol of NOAA
   flag_var <- str_subset(names(netcdf_obj$var), "^xrsb_flag[s]?$")
   stopifnot(length(flag_var) == 1)
-  flag_meanings <- NULL
-  flag_masks <- NULL
-  flag_values <- NULL
+  flag_meanings <- flag_masks <- flag_values <- NULL
   netcdf_obj %>%
     ncatt_get(flag_var) %>%
     with(
