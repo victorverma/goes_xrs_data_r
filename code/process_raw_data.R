@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 
 # Set up the log file -----------------------------------------------------
 
-invisible(file.remove(here("code/process_raw_data.log")))
+unlink(here("code/process_raw_data.log"))
 log_appender(appender_tee(here("code/process_raw_data.log")))
 
 # Define functions --------------------------------------------------------
